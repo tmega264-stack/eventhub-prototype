@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>EventHub Prototype</title>
-    <link rel="stylesheet" href="styles.css?v=tablet-1" />
+    <link rel="stylesheet" href="styles.css?v=gallery-1" />
   </head>
   <body>
     <div class="app">
@@ -16,6 +16,7 @@
         <nav class="nav" aria-label="Primary">
           <button class="nav-link active" data-view="home">Головна</button>
           <button class="nav-link" data-view="catalog">Каталог</button>
+          <button class="nav-link" data-view="gallery">Галерея</button>
           <button class="nav-link" data-view="favorites">Обране</button>
           <button class="nav-link" data-view="calendar">Календар</button>
           <button class="nav-link" data-view="profile">Профіль</button>
@@ -114,6 +115,44 @@
               </div>
               <div class="event-list" id="catalogEvents"></div>
             </section>
+          </section>
+        </section>
+
+        <section class="view" id="gallery">
+          <section class="gallery-shell" aria-label="Динамічна галерея EventHub">
+            <div class="gallery-copy">
+              <p class="eyebrow">Динамічна галерея</p>
+              <h1>Портфоліо екранів EventHub</h1>
+              <p class="lead">
+                Анімована добірка ключових UI-рішень: головна сторінка, каталог, реєстрація,
+                календар, темна тема та планшетна адаптація.
+              </p>
+              <div class="gallery-actions">
+                <button class="primary-button" id="galleryAutoplay">Пауза autoplay</button>
+                <button class="ghost-button" id="galleryOpenEvent" data-view="catalog">Перейти до каталогу</button>
+              </div>
+            </div>
+
+            <div class="gallery-stage">
+              <div class="gallery-window">
+                <div class="gallery-track" id="galleryTrack"></div>
+              </div>
+              <button class="gallery-control prev" id="galleryPrev" aria-label="Попередній слайд">‹</button>
+              <button class="gallery-control next" id="galleryNext" aria-label="Наступний слайд">›</button>
+              <div class="gallery-progress"><span id="galleryProgress"></span></div>
+            </div>
+
+            <aside class="gallery-panel">
+              <p class="eyebrow" id="galleryKicker">Слайд 1</p>
+              <h2 id="galleryTitle"></h2>
+              <p id="galleryDescription"></p>
+              <div class="gallery-micro">
+                <span>Smart Animate</span>
+                <span>Hover</span>
+                <span>Autoplay</span>
+              </div>
+              <div class="gallery-dots" id="galleryDots" aria-label="Навігація галереї"></div>
+            </aside>
           </section>
         </section>
 
@@ -223,6 +262,6 @@
 
     <div class="toast hidden" id="toast"></div>
 
-    <script src="app.js?v=tablet-1"></script>
+    <script src="app.js?v=gallery-1"></script>
   </body>
 </html>

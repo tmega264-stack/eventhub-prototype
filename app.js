@@ -53,6 +53,51 @@ const events = [
   }
 ];
 
+const galleryItems = [
+  {
+    title: "Головний екран EventHub",
+    kicker: "Слайд 1 · Hero",
+    image: "education",
+    description:
+      "Перший екран пояснює ідею продукту, показує пошук подій і формує швидкий шлях до каталогу."
+  },
+  {
+    title: "Каталог і фільтри",
+    kicker: "Слайд 2 · Навігація",
+    image: "volunteer",
+    description:
+      "Картки, фільтри та active-стани допомагають користувачу знайти освітню, культурну або волонтерську подію."
+  },
+  {
+    title: "Реєстрація на подію",
+    kicker: "Слайд 3 · User flow",
+    image: "online",
+    description:
+      "Форма має послідовні кроки, стани помилок і підтвердження, щоб користувач розумів результат дії."
+  },
+  {
+    title: "Календар участі",
+    kicker: "Слайд 4 · Мікровзаємодії",
+    image: "culture",
+    description:
+      "Після реєстрації подія з’являється в календарі, а інтерфейс показує завершення користувацького сценарію."
+  },
+  {
+    title: "Світла і темна теми",
+    kicker: "Слайд 5 · Design system",
+    image: "education",
+    description:
+      "CSS-змінні дозволяють перемикати тему без зміни структури сторінки та зберігати єдину дизайн-систему."
+  },
+  {
+    title: "Планшетна адаптація",
+    kicker: "Слайд 6 · Responsive UI",
+    image: "volunteer",
+    description:
+      "Сітка перебудовується для планшетів: карточки стають у дві колонки, а навігація зберігає зручні touch-зони."
+  }
+];
+
 const requestedTheme = new URLSearchParams(window.location.search).get("theme");
 
 const state = {
@@ -60,6 +105,9 @@ const state = {
   favorites: new Set([1]),
   registered: new Set(),
   category: "all",
+  galleryIndex: 0,
+  galleryAutoplay: true,
+  galleryHover: false,
   theme: requestedTheme === "dark" || requestedTheme === "light"
     ? requestedTheme
     : localStorage.getItem("eventhub-theme") || "light"
@@ -80,6 +128,14 @@ const registerForm = document.querySelector("#registerForm");
 const toast = document.querySelector("#toast");
 const themeToggle = document.querySelector("#themeToggle");
 const themeLabel = document.querySelector("#themeLabel");
+const galleryTrack = document.querySelector("#galleryTrack");
+const galleryKicker = document.querySelector("#galleryKicker");
+const galleryTitle = document.querySelector("#galleryTitle");
+const galleryDescription = document.querySelector("#galleryDescription");
+const galleryDots = document.querySelector("#galleryDots");
+const galleryProgress = document.querySelector("#galleryProgress");
+const galleryAutoplayButton = document.querySelector("#galleryAutoplay");
+const galleryStage = document.querySelector(".gallery-stage");
 
 function applyTheme() {
   document.documentElement.dataset.theme = state.theme;
@@ -204,6 +260,38 @@ function renderProfile() {
     : `<p class="empty-state">Зареєструйся на подію, щоб побачити квиток.</p>`;
 }
 
+function renderGallery() {
+  if (!galleryTrack) return;
+  if (!galleryTrack.dataset.ready) {
+    galleryTrack.innerHTML = galleryItems.map((item) => `
+      <article class="gallery-slide">
+        <div class="gallery-art ${item.image}"></div>
+        <div class="gallery-slide-content">
+          <p class="eyebrow">${item.kicker}</p>
+          <h3>${item.title}</h3>
+          <p>${item.description}</p>
+        </div>
+      </article>
+    `).join("");
+    galleryTrack.dataset.ready = "true";
+  }
+
+  const current = galleryItems[state.galleryIndex];
+  galleryTrack.style.transform = `translateX(-${state.galleryIndex * 100}%)`;
+  galleryKicker.textContent = current.kicker;
+  galleryTitle.textContent = current.title;
+  galleryDescription.textContent = current.description;
+  galleryProgress.style.width = `${((state.galleryIndex + 1) / galleryItems.length) * 100}%`;
+  galleryAutoplayButton.textContent = state.galleryAutoplay ? "Пауза autoplay" : "Увімкнути autoplay";
+  galleryDots.innerHTML = galleryItems.map((item, index) => `
+    <button
+      class="gallery-dot ${index === state.galleryIndex ? "active" : ""}"
+      data-gallery-dot="${index}"
+      aria-label="Відкрити ${item.kicker}">
+    </button>
+  `).join("");
+}
+
 function render() {
   renderHome();
   renderCatalog();
@@ -211,6 +299,7 @@ function render() {
   renderFavorites();
   renderCalendar();
   renderProfile();
+  renderGallery();
 }
 
 function openEvent(id) {
@@ -235,6 +324,15 @@ function showToast(message) {
   toast.classList.remove("hidden");
   clearTimeout(showToast.timer);
   showToast.timer = setTimeout(() => toast.classList.add("hidden"), 2600);
+}
+
+function setGalleryIndex(index) {
+  state.galleryIndex = (index + galleryItems.length) % galleryItems.length;
+  renderGallery();
+}
+
+function moveGallery(direction) {
+  setGalleryIndex(state.galleryIndex + direction);
 }
 
 function openModal() {
@@ -280,6 +378,9 @@ document.addEventListener("click", (event) => {
 
   const favoriteButton = event.target.closest("[data-favorite]");
   if (favoriteButton) toggleFavorite(favoriteButton.dataset.favorite);
+
+  const galleryDot = event.target.closest("[data-gallery-dot]");
+  if (galleryDot) setGalleryIndex(Number(galleryDot.dataset.galleryDot));
 });
 
 document.querySelector("#loginButton").addEventListener("click", openModal);
@@ -316,6 +417,26 @@ document.querySelector("#detailFavoriteButton").addEventListener("click", () => 
   toggleFavorite(state.currentEvent.id);
 });
 
+document.querySelector("#galleryPrev").addEventListener("click", () => moveGallery(-1));
+document.querySelector("#galleryNext").addEventListener("click", () => moveGallery(1));
+galleryAutoplayButton.addEventListener("click", () => {
+  state.galleryAutoplay = !state.galleryAutoplay;
+  renderGallery();
+  showToast(state.galleryAutoplay ? "Autoplay галереї увімкнено." : "Autoplay галереї зупинено.");
+});
+galleryStage.addEventListener("mouseenter", () => {
+  state.galleryHover = true;
+});
+galleryStage.addEventListener("mouseleave", () => {
+  state.galleryHover = false;
+});
+
+document.addEventListener("keydown", (event) => {
+  if (!document.querySelector("#gallery").classList.contains("active")) return;
+  if (event.key === "ArrowLeft") moveGallery(-1);
+  if (event.key === "ArrowRight") moveGallery(1);
+});
+
 document.querySelector("#homeSearchButton").addEventListener("click", () => {
   document.querySelector("#catalogSearch").value = document.querySelector("#homeSearch").value;
   setView("catalog");
@@ -342,3 +463,7 @@ document.querySelectorAll(".category-chip").forEach((chip) => {
 
 applyTheme();
 render();
+
+setInterval(() => {
+  if (state.galleryAutoplay && !state.galleryHover) moveGallery(1);
+}, 4200);
