@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EventHub Prototype</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <button class="brand" data-view="home" aria-label="EventHub home">
+          <span class="brand-mark">✦</span>
+          <span>Event<span>Hub</span></span>
+        </button>
+        <nav class="nav" aria-label="Primary">
+          <button class="nav-link active" data-view="home">Головна</button>
+          <button class="nav-link" data-view="catalog">Каталог</button>
+          <button class="nav-link" data-view="favorites">Обране</button>
+          <button class="nav-link" data-view="calendar">Календар</button>
+          <button class="nav-link" data-view="profile">Профіль</button>
+        </nav>
+        <button class="ghost-button" id="loginButton">Увійти</button>
+      </header>
+
+      <main>
+        <section class="view active" id="home">
+          <div class="hero-grid">
+            <section class="hero-panel">
+              <p class="eyebrow">Платформа подій для молоді</p>
+              <h1>Знаходь події, які надихають</h1>
+              <p class="lead">
+                Освітні зустрічі, культурні події та волонтерські можливості в одному місці.
+              </p>
+              <div class="hero-search" role="search">
+                <input id="homeSearch" type="search" placeholder="UX, волонтерство, кіно..." />
+                <button class="primary-button" id="homeSearchButton">Знайти</button>
+              </div>
+              <div class="quick-stats">
+                <span><b>24</b> події цього тижня</span>
+                <span><b>8</b> безкоштовних</span>
+                <span><b>5</b> онлайн</span>
+              </div>
+            </section>
+
+            <aside class="phone-preview" aria-label="Mobile preview">
+              <div class="phone-frame">
+                <div class="phone-top"></div>
+                <h3>Digital Education Forum</h3>
+                <p>15 червня · Львів</p>
+                <div class="mini-photo education"></div>
+                <button class="primary-button compact" data-open-event="1">Деталі</button>
+              </div>
+            </aside>
+          </div>
+
+          <section class="category-strip">
+            <button class="category-chip active" data-category="all">Усі</button>
+            <button class="category-chip" data-category="education">Освіта</button>
+            <button class="category-chip" data-category="culture">Культура</button>
+            <button class="category-chip" data-category="volunteer">Волонтерство</button>
+            <button class="category-chip" data-category="online">Онлайн</button>
+          </section>
+
+          <section class="section-head">
+            <div>
+              <p class="eyebrow">Популярні події</p>
+              <h2>Обери можливість на цей тиждень</h2>
+            </div>
+            <button class="text-button" data-view="catalog">Відкрити каталог</button>
+          </section>
+          <div class="event-grid" id="homeEvents"></div>
+        </section>
+
+        <section class="view" id="catalog">
+          <section class="catalog-layout">
+            <aside class="filters-panel">
+              <p class="eyebrow">Фільтри</p>
+              <h2>Налаштуй пошук</h2>
+              <label>
+                Запит
+                <input id="catalogSearch" type="search" placeholder="Назва або тема" />
+              </label>
+              <label>
+                Місто
+                <select id="cityFilter">
+                  <option value="all">Усі міста</option>
+                  <option value="Київ">Київ</option>
+                  <option value="Львів">Львів</option>
+                  <option value="Одеса">Одеса</option>
+                  <option value="Онлайн">Онлайн</option>
+                </select>
+              </label>
+              <div class="check-row">
+                <input id="freeOnly" type="checkbox" />
+                <label for="freeOnly">Тільки безкоштовні</label>
+              </div>
+              <button class="primary-button" id="applyFilters">Застосувати</button>
+              <button class="ghost-button full" id="clearFilters">Скинути</button>
+            </aside>
+            <section class="catalog-results">
+              <div class="section-head tight">
+                <div>
+                  <p class="eyebrow">Каталог</p>
+                  <h2 id="resultTitle">Знайдені події</h2>
+                </div>
+                <span class="result-count" id="resultCount"></span>
+              </div>
+              <div class="event-list" id="catalogEvents"></div>
+            </section>
+          </section>
+        </section>
+
+        <section class="view" id="detail">
+          <button class="text-button back-button" data-view="catalog">← Назад до каталогу</button>
+          <article class="detail-card">
+            <div class="detail-visual" id="detailVisual"></div>
+            <div class="detail-content">
+              <p class="eyebrow" id="detailType"></p>
+              <h1 id="detailTitle"></h1>
+              <p class="detail-meta" id="detailMeta"></p>
+              <p id="detailDescription"></p>
+              <div class="detail-actions">
+                <button class="primary-button orange" id="registerButton">Зареєструватися</button>
+                <button class="ghost-button" id="detailFavoriteButton">Додати в обране</button>
+              </div>
+              <div class="state-strip">
+                <span>Hover: кнопки змінюють тінь</span>
+                <span>Active: вибрані фільтри підсвічені</span>
+                <span>Error: форма показує повідомлення</span>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="view" id="favorites">
+          <section class="section-head">
+            <div>
+              <p class="eyebrow">Обране</p>
+              <h2>Збережені події</h2>
+            </div>
+            <button class="primary-button" data-view="catalog">Знайти ще</button>
+          </section>
+          <div class="event-list" id="favoriteEvents"></div>
+          <p class="empty-state" id="emptyFavorites">Поки немає збережених подій.</p>
+        </section>
+
+        <section class="view" id="calendar">
+          <section class="calendar-layout">
+            <div class="calendar-card">
+              <div class="section-head tight">
+                <div>
+                  <p class="eyebrow">Календар</p>
+                  <h2>Червень 2026</h2>
+                </div>
+              </div>
+              <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+            <aside class="calendar-side">
+              <p class="eyebrow">Найближчі</p>
+              <h2>Мої події</h2>
+              <div id="registeredList"></div>
+            </aside>
+          </section>
+        </section>
+
+        <section class="view" id="profile">
+          <section class="profile-layout">
+            <aside class="profile-menu">
+              <div class="avatar">Є</div>
+              <h2>Євген</h2>
+              <button class="profile-tab active">Мої події</button>
+              <button class="profile-tab">Квитки</button>
+              <button class="profile-tab">Налаштування</button>
+            </aside>
+            <section class="profile-content">
+              <p class="eyebrow">Профіль</p>
+              <h2>Мої події та квитки</h2>
+              <div id="profileEvents"></div>
+            </section>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop hidden" id="modalBackdrop">
+      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal-close" id="closeModal" aria-label="Закрити">×</button>
+        <div id="authStep">
+          <p class="eyebrow">Крок 1</p>
+          <h2 id="modalTitle">Увійти в EventHub</h2>
+          <p>Авторизація потрібна, щоб створити квиток та додати подію в календар.</p>
+          <button class="primary-button full" id="continueAuth">Продовжити як Євген</button>
+        </div>
+        <form id="registerForm" class="hidden" novalidate>
+          <p class="eyebrow">Крок 2</p>
+          <h2>Форма реєстрації</h2>
+          <label>
+            Ім'я та прізвище
+            <input name="name" placeholder="Євген Нестеренко" />
+            <span class="error-text">Введи ім'я для квитка.</span>
+          </label>
+          <label>
+            Email
+            <input name="email" placeholder="student@email.com" />
+            <span class="error-text">Введи коректний email.</span>
+          </label>
+          <div class="check-row">
+            <input id="terms" name="terms" type="checkbox" />
+            <label for="terms">Погоджуюсь з умовами участі</label>
+          </div>
+          <span class="error-text terms-error">Потрібно погодитись з умовами.</span>
+          <button class="primary-button orange full" type="submit">Підтвердити участь</button>
+        </form>
+      </section>
+    </div>
+
+    <div class="toast hidden" id="toast"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
