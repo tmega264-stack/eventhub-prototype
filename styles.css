@@ -64,6 +64,7 @@ select {
 
 button {
   cursor: pointer;
+  min-height: 44px;
 }
 
 .app {
@@ -775,6 +776,109 @@ select:focus {
   text-align: center;
 }
 
+@media (min-width: 901px) and (max-width: 1180px) {
+  .topbar {
+    grid-template-columns: 1fr auto;
+    gap: 12px 18px;
+    padding: 14px 24px;
+  }
+
+  .nav {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 2px;
+  }
+
+  .nav-link {
+    flex: 0 0 auto;
+  }
+
+  main {
+    max-width: 100%;
+    padding: 28px;
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 22px;
+  }
+
+  .hero-panel {
+    min-height: 360px;
+    padding: 34px;
+  }
+
+  h1 {
+    font-size: 48px;
+  }
+
+  h2 {
+    font-size: 27px;
+  }
+
+  .lead {
+    font-size: 17px;
+  }
+
+  .phone-preview {
+    padding: 22px;
+  }
+
+  .phone-frame {
+    width: 210px;
+    min-height: 350px;
+  }
+
+  .event-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .catalog-layout,
+  .calendar-layout,
+  .profile-layout {
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .filters-panel,
+  .catalog-results,
+  .calendar-card,
+  .calendar-side,
+  .profile-menu,
+  .profile-content {
+    padding: 20px;
+  }
+
+  .event-row {
+    grid-template-columns: 120px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .event-row .card-actions {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .detail-card {
+    grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.15fr);
+    gap: 22px;
+  }
+
+  .detail-visual {
+    min-height: 360px;
+  }
+
+  .calendar-grid {
+    gap: 8px;
+  }
+
+  .day {
+    min-height: 64px;
+    padding: 8px;
+  }
+}
+
 @media (max-width: 900px) {
   .topbar,
   .hero-grid,
@@ -787,12 +891,33 @@ select:focus {
   }
 
   .topbar {
-    position: static;
+    position: sticky;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 18px;
+  }
+
+  .brand {
+    font-size: 21px;
+  }
+
+  .top-actions {
+    margin-left: auto;
   }
 
   .nav {
+    order: 3;
+    flex: 1 0 100%;
     justify-content: flex-start;
     overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+
+  .nav-link {
+    flex: 0 0 auto;
+    padding: 10px 13px;
   }
 
   main {
@@ -803,7 +928,116 @@ select:focus {
     font-size: 42px;
   }
 
+  .hero-panel {
+    min-height: auto;
+    padding: 32px;
+  }
+
+  .phone-frame {
+    width: min(260px, 100%);
+    min-height: 340px;
+  }
+
   .event-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .event-row {
+    grid-template-columns: 120px minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .event-row .card-actions {
+    grid-column: 2;
+  }
+
+  .detail-visual {
+    min-height: 300px;
+  }
+
+  .calendar-grid {
+    gap: 7px;
+  }
+
+  .day {
+    min-height: 58px;
+    padding: 8px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 640px) {
+  main {
+    padding: 16px;
+  }
+
+  .topbar {
+    padding: 12px 14px;
+  }
+
+  .brand span:last-child {
+    display: none;
+  }
+
+  .theme-toggle {
+    padding: 8px 10px;
+  }
+
+  .hero-panel {
+    padding: 24px;
+  }
+
+  h1 {
+    font-size: 34px;
+    line-height: 1.05;
+  }
+
+  h2 {
+    font-size: 25px;
+  }
+
+  .lead {
+    font-size: 16px;
+  }
+
+  .hero-search,
+  .section-head,
+  .detail-actions,
+  .card-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .event-grid,
+  .event-row {
     grid-template-columns: 1fr;
+  }
+
+  .event-row .card-actions {
+    grid-column: auto;
+  }
+
+  .event-row .event-photo,
+  .event-photo {
+    height: 170px;
+  }
+
+  .phone-preview {
+    display: none;
+  }
+
+  .calendar-grid {
+    gap: 5px;
+  }
+
+  .day {
+    min-height: 50px;
+    border-radius: 10px;
+    padding: 6px;
+    font-size: 12px;
+  }
+
+  .day small {
+    display: none;
   }
 }
