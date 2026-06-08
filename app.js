@@ -53,11 +53,16 @@ const events = [
   }
 ];
 
+const requestedTheme = new URLSearchParams(window.location.search).get("theme");
+
 const state = {
   currentEvent: events[0],
   favorites: new Set([1]),
   registered: new Set(),
-  category: "all"
+  category: "all",
+  theme: requestedTheme === "dark" || requestedTheme === "light"
+    ? requestedTheme
+    : localStorage.getItem("eventhub-theme") || "light"
 };
 
 const views = document.querySelectorAll(".view");
@@ -73,6 +78,18 @@ const modal = document.querySelector("#modalBackdrop");
 const authStep = document.querySelector("#authStep");
 const registerForm = document.querySelector("#registerForm");
 const toast = document.querySelector("#toast");
+const themeToggle = document.querySelector("#themeToggle");
+const themeLabel = document.querySelector("#themeLabel");
+
+function applyTheme() {
+  document.documentElement.dataset.theme = state.theme;
+  themeLabel.textContent = state.theme === "dark" ? "Темна" : "Світла";
+  themeToggle.setAttribute(
+    "aria-label",
+    state.theme === "dark" ? "Перемкнути на світлу тему" : "Перемкнути на темну тему"
+  );
+  localStorage.setItem("eventhub-theme", state.theme);
+}
 
 function setView(id) {
   views.forEach((view) => view.classList.toggle("active", view.id === id));
@@ -266,6 +283,11 @@ document.addEventListener("click", (event) => {
 });
 
 document.querySelector("#loginButton").addEventListener("click", openModal);
+themeToggle.addEventListener("click", () => {
+  state.theme = state.theme === "dark" ? "light" : "dark";
+  applyTheme();
+  showToast(state.theme === "dark" ? "Увімкнено темну тему." : "Увімкнено світлу тему.");
+});
 document.querySelector("#registerButton").addEventListener("click", openModal);
 document.querySelector("#closeModal").addEventListener("click", closeModal);
 document.querySelector("#modalBackdrop").addEventListener("click", (event) => {
@@ -318,4 +340,5 @@ document.querySelectorAll(".category-chip").forEach((chip) => {
   });
 });
 
+applyTheme();
 render();
